@@ -1,0 +1,44 @@
+<p class='pull-right'>
+  [<%= link_to 'Edit Post', edit_post_path(@post) %>]
+</p>
+
+<%= render @post.categories %>
+
+<%= render 'shared/content_title', title: @post.title %>
+
+<div>
+  <p><%= @post.description %></p>
+  <p>
+    <br>
+    <span class='quiet'>Posted by: </span><%= @post.creator.username %>
+    <small> - <%= format_time(@post.created_at) %></small>
+  </p>
+</div>
+<hr/>
+
+<% if @comment.errors.any? %>
+  <div class='alert alert-error'>
+    <strong>Please correct the following errors:</strong>
+    <ul>
+      <% @comment.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_for [@post,  @comment] do |f| %>
+  <%= f.label :body, "Leave a comment:" %> 
+  <%= f.text_area :body, rows: 3, class: 'span4' %>
+  <%= f.label :user_id, "User ID" %>
+  <%= f.text_field :user_id %>
+  <br/>
+  <%= f.submit "Submit Comment", class: 'btn btn-primary' %>
+<% end %>
+
+
+<p class='lead'>
+  Comments:
+  <hr/>
+</p>
+<%= render @post.comments %>
