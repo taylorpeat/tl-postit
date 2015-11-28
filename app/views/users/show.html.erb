@@ -1,0 +1,22 @@
+<%= render 'shared/content_title', title: "#{local_user.username}'s profile" %>
+
+<div class="well">
+  <b>Username: &nbsp;</b><%= local_user.username %><br>
+  <b>Time zone:</b>
+</div>
+<b><%= local_user.username %>'s Activity</b>
+<hr>
+<ul class="nav nav-tabs">
+  <li class=<%= params[:tab] ? "" : "active" %>>
+    <%= link_to "Posts (#{local_user.posts.size})", user_path(local_user) %>
+  </li>
+  <li class=<%= params[:tab] ? "active" : "" %>>
+    <%= link_to "Comments (#{local_user.comments.size})", user_path(local_user, tab: "comments") %>
+  </li>
+</ul>
+
+<% if params[:tab] %>
+  <%= render local_user.comments, profile_page: true %>
+<% else %>
+  <%= render local_user.posts %>
+<% end %>

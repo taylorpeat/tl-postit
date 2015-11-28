@@ -1,10 +1,29 @@
 <div class='row'>
+<div class='span0 well text-center'>
+  <% if logged_in? %>  
+    <%= link_to vote_post_comment_path(comment.post_id, comment, vote: true), method: 'post' do %>
+      <i class="icon-arrow-up"></i>
+    <% end %>
+    <br>
+  <% end %>
+  <%= "#{comment.vote_total} votes" %>
+  <br>
+  <% if logged_in? %>  
+    <%= link_to vote_post_comment_path(comment.post_id, comment, vote: false), method: 'post' do %>
+      <i class="icon-arrow-down"></i>
+    <% end %>
+  <% end %>
+</div>
+
 <div class='span8 well'>
   <p>
     <em>"<%= comment.body %>"</em>
+    <% if profile_page %>
+      on <%= link_to comment.post.title, post_path(comment.post) %>
+    <% end %>
   </p>
   <p>
-    <small><span class='quiet'>Posted by:</span> <%= comment.creator.username %> - <%= format_time(comment.created_at) %></small>
+    <small><span class='quiet'>Posted by:</span> <%= link_to comment.creator.username, user_path(comment.creator) %> - <%= format_time(comment.created_at) %></small>
   </p>
 </div>
 </div>

@@ -1,6 +1,8 @@
-<p class='pull-right'>
-  [<%= link_to 'Edit Post', edit_post_path(@post) %>]
-</p>
+<% if current_user == @post.creator %>
+  <p class='pull-right'>
+    [<%= link_to 'Edit Post', edit_post_path(@post) %>]
+  </p>
+<% end %>
 
 <%= render @post.categories %>
 
@@ -10,7 +12,7 @@
   <p><%= @post.description %></p>
   <p>
     <br>
-    <span class='quiet'>Posted by: </span><%= @post.creator.username %>
+    <span class='quiet'>Posted by: </span><%= link_to @post.creator.username, user_path(@post.creator) %>
     <small> - <%= format_time(@post.created_at) %></small>
   </p>
 </div>
@@ -30,8 +32,6 @@
 <%= form_for [@post,  @comment] do |f| %>
   <%= f.label :body, "Leave a comment:" %> 
   <%= f.text_area :body, rows: 3, class: 'span4' %>
-  <%= f.label :user_id, "User ID" %>
-  <%= f.text_field :user_id %>
   <br/>
   <%= f.submit "Submit Comment", class: 'btn btn-primary' %>
 <% end %>
@@ -41,4 +41,4 @@
   Comments:
   <hr/>
 </p>
-<%= render @post.comments %>
+<%= render @post.comments, profile_page: false %>

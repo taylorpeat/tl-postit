@@ -1,0 +1,12 @@
+<%= render 'shared/errors', error_object: @user %>
+
+<div class='well'>
+  <%= form_tag go_to_action, method: form_method do %>
+    <%= label_tag :username %>
+    <%= text_field_tag :username, current_user ? current_user.username : '' %>
+    <%= label_tag :password %>
+    <%= password_field_tag :password %>
+    <br>
+    <%= submit_tag submit_button_text, class: 'btn btn-primary' %>
+  <% end %>
+</div>
