@@ -10,6 +10,7 @@ class SessionsController < ApplicationController
 
   def create
     user = User.find_by_username(params[:username])
+    binding.pry
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
       flash[:notice] = "Logged in successfully."

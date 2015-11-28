@@ -1,7 +1,7 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :vote]
   before_action :require_login, only: [:new, :create, :vote]
-  before_action :require_current_user, only: [:edit, :update]
+  before_action :require_post_creator, only: [:edit, :update]
 
   def index
     @posts = Post.all

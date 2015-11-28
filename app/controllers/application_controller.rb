@@ -17,6 +17,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_post_creator
+    post = Post.find(params[:id])
+    user = post.creator
+    unless !current_user.nil? && current_user == user
+      flash[:error] = "You are not authorized for this action."
+      redirect_to :back
+    end
+  end
+
   def logged_in?
     !!current_user
   end
