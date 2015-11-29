@@ -40,18 +40,23 @@ class PostsController < ApplicationController
   end
 
   def vote
-    if exist_vote = @post.votes.where(user_id: session[:user_id]).first
-      exist_vote_check(exist_vote) and return
-    end
+
+    # if exist_vote = @post.votes.where(user_id: session[:user_id]).first
+    #   exist_vote_check(exist_vote) and return
+    # end
 
     vote = @post.votes.create(vote: params[:vote], user_id: session[:user_id])
 
-    if vote.valid?
-      flash[:success] = "Your vote has been counted."
-    else
-      flash[:error] = "Your vote could not be counted."
+    respond_to do |format|
+      if vote.valid?
+        format.html { redirect_to :back, flash[:success] = "Your vote has been counted." }
+        format.js
+      else
+        format.html { redirect_to :back, flash[:error] = "Your vote could not be counted." }
+        format.js
+      end
     end
-    redirect_to :back
+      
   end
 
   private

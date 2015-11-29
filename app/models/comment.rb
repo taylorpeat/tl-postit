@@ -8,6 +8,14 @@ class Comment < ActiveRecord::Base
   validates :post_id, presence: true
 
   def vote_total
-    self.votes.where(vote: true).size - self.votes.where(vote: false).size
+    up_votes - down_votes
+  end
+
+  def up_votes
+    self.votes.where(vote: true).size
+  end
+
+  def down_votes
+    self.votes.where(vote: false).size
   end
 end
