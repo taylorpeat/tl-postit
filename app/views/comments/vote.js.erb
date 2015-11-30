@@ -1,0 +1,11 @@
+$("#comment_<%= @comment.id %>_votes").fadeOut(200, function() {
+  $("#comment_<%= @comment.id %>_votes").hide().html("<%= @message %>").fadeIn(200, function () {
+    $("#comment_<%= @comment.id %>_votes").delay(1000).fadeOut(200, function () {      
+      $("#comment_<%= @comment.id %>_votes").hide().html("<%= @comment.vote_total %> votes").fadeIn({duration: 200, queue: false});
+    });
+  });
+});
+
+$('#comment_<%= @comment.id %>_arrow<%= @fade_out %>').fadeOut({duration: 200, queue: false});
+
+$('#comment_<%= @comment.id %>_arrow<%= @fade_in %>').removeClass('collapse').hide().delay(200).fadeIn(200);

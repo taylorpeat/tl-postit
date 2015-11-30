@@ -40,23 +40,35 @@ class PostsController < ApplicationController
   end
 
   def vote
-
-    # if exist_vote = @post.votes.where(user_id: session[:user_id]).first
-    #   exist_vote_check(exist_vote) and return
-    # end
-
-    vote = @post.votes.create(vote: params[:vote], user_id: session[:user_id])
-
     respond_to do |format|
-      if vote.valid?
-        format.html { redirect_to :back, flash[:success] = "Your vote has been counted." }
-        format.js
-      else
-        format.html { redirect_to :back, flash[:error] = "Your vote could not be counted." }
-        format.js
+      if exist_vote = @post.votes.find_by(user_id: session[:user_id])
+        unless exist_vote.vote.to_s == params[:vote]
+          exist_vote.delete
+          @message = "Vote<br>removed".html_safe
+          @fade_in = exist_vote.vote ? ".icon-arrow-up" : ".icon-arrow-down"
+          @fade_out = "#no_id"
+          format.html { redirect_to :back; flash[:success] = "Your previous vote has been removed." }
+          format.js {}
+        end
       end
-    end
-      
+      if @message == nil
+        vote = @post.votes.create(vote: params[:vote], user_id: session[:user_id])
+        
+        if vote.valid?
+          @fade_in = "#no_id"
+          if vote.vote
+            @fade_out = ".icon-arrow-up"
+          else
+            @fade_out = ".icon-arrow-down"
+          end
+          format.html { redirect_to :back; flash[:success] = "Your vote has been counted." }
+          format.js { @message = "Vote<br>counted".html_safe }
+        else
+          format.html { redirect_to :back; flash[:error] = "Your vote could not be counted." }
+          format.js { @message = "Vote<br>not<br>counted".html_safe }
+        end
+      end
+    end  
   end
 
   private

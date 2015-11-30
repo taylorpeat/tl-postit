@@ -1,29 +1,29 @@
 <div class='row'>
-<div class='span0 well text-center'>
-  <% if logged_in? %>  
-    <%= link_to vote_post_comment_path(comment.post_id, comment, vote: true), method: 'post' do %>
-      <i class="icon-arrow-up"></i>
+  <div class='span0 well text-center vote_arrows'>
+    <% if logged_in? %>  
+      <%= link_to vote_post_comment_path(comment.post_id, comment, vote: true), method: 'post', remote: true do %>
+        <i class="icon-arrow-up <%= voted_true?(comment) %>" id="comment_<%= comment.id %>_arrow"></i>
+      <% end %>
+      <br>
     <% end %>
+    <span id="comment_<%= comment.id %>_votes"><%= "#{comment.vote_total} votes" %></span>
     <br>
-  <% end %>
-  <%= "#{comment.vote_total} votes" %>
-  <br>
-  <% if logged_in? %>  
-    <%= link_to vote_post_comment_path(comment.post_id, comment, vote: false), method: 'post' do %>
-      <i class="icon-arrow-down"></i>
+    <% if logged_in? %>  
+      <%= link_to vote_post_comment_path(comment.post_id, comment, vote: false), method: 'post', remote: true do %>
+        <i class="icon-arrow-down <%= voted_false?(comment) %>" id="comment_<%= comment.id %>_arrow"></i>
+      <% end %>
     <% end %>
-  <% end %>
-</div>
+  </div>
 
-<div class='span8 well'>
-  <p>
-    <em>"<%= comment.body %>"</em>
-    <% if profile_page %>
-      on <%= link_to comment.post.title, post_path(comment.post) %>
-    <% end %>
-  </p>
-  <p>
-    <small><span class='quiet'>Posted by:</span> <%= link_to comment.creator.username, user_path(comment.creator) %> - <%= format_time(comment.created_at) %></small>
-  </p>
-</div>
+  <div class='span8 well'>
+    <p>
+      <em>"<%= comment.body %>"</em>
+      <% if profile_page %>
+        on <%= link_to comment.post.title, post_path(comment.post) %>
+      <% end %>
+    </p>
+    <p>
+      <small><span class='quiet'>Posted by:</span> <%= link_to comment.creator.username, user_path(comment.creator) %> - <%= format_time(comment.created_at) %></small>
+    </p>
+  </div>
 </div>

@@ -47,8 +47,8 @@ class ApplicationController < ActionController::Base
   def exist_vote_check(exist_vote)
     unless exist_vote.vote.to_s == params[:vote]
       exist_vote.delete
-      flash[:success] = "Your previous vote has been removed."
-      redirect_to :back
+        format.html { redirect_to :back; flash[:success] = "Your previous vote has been removed." }
+        format.js { @message = "Previous<br>vote<br>removed".html_safe }
     end
   end
 end

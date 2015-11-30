@@ -16,18 +16,36 @@ class CommentsController < ApplicationController
 
    def vote
     @comment = Comment.find(params[:id])
-    if exist_vote = @comment.votes.find_by(user_id: session[:user_id])
-      return unless exist_vote_check(exist_vote) == nil
-    end
+    respond_to do |format|
+      if exist_vote = @comment.votes.find_by(user_id: session[:user_id])
+        unless exist_vote.vote.to_s == params[:vote]
+          exist_vote.delete
+          @message = "Vote<br>removed".html_safe
+          @fade_in = exist_vote.vote ? ".icon-arrow-up" : ".icon-arrow-down"
+          @fade_out = "#no_id"
+          format.html { redirect_to :back; flash[:success] = "Your previous vote has been removed." }
+          format.js {}
+        end
+      end
 
-    vote = @comment.votes.create(vote: params[:vote], user_id: session[:user_id])
+      if @message == nil
+        vote = @comment.votes.create(vote: params[:vote], user_id: session[:user_id])
 
-    if vote.valid?
-      flash[:success] = "Your vote has been counted."
-    else
-      flash[:error] = "Your vote could not be counted."
+        if vote.valid?
+          @fade_in = "#no_id"
+          if vote.vote
+            @fade_out = ".icon-arrow-up"
+          else
+            @fade_out = ".icon-arrow-down"
+          end
+          format.html { redirect_to :back; flash[:success] = "Your vote has been counted." }
+          format.js { @message = "Vote<br>counted".html_safe }
+        else
+          format.html { redirect_to :back; flash[:error] = "Your vote could not be counted." }
+          format.js { @message = "Vote<br>not<br>counted".html_safe }
+        end
+      end
     end
-    redirect_to :back
   end
 
   private
