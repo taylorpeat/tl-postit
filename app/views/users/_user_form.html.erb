@@ -1,11 +1,13 @@
 <%= render 'shared/errors', error_object: @user %>
 
 <div class='well'>
-  <%= form_tag go_to_action, method: form_method do %>
-    <%= label_tag :username %>
-    <%= text_field_tag :username, current_user ? current_user.username : '' %>
-    <%= label_tag :password %>
-    <%= password_field_tag :password %>
+  <%= form_for @user do |f| %>
+    <%= f.label :username, "Username" %>
+    <%= f.text_field :username %>
+    <%= f.label :password, "Password"%>
+    <%= f.password_field :password %>
+    <%= f.label :time_zone, "Timezone" %>
+    <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones %>
     <br>
     <%= submit_tag submit_button_text, class: 'btn btn-primary' %>
   <% end %>

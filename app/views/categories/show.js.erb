@@ -1,0 +1,5 @@
+$("#post_group").fadeOut(300, function() {
+  $("#post_group").html("<%= escape_javascript( render @posts, formats: [:html] ) %>").fadeIn(300);
+});
+
+$("#paginate_group").replaceWith("<%= escape_javascript(render 'shared/pagination', link_type: @category, formats: [:html] ) %>");

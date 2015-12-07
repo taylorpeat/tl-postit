@@ -3,7 +3,9 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  helper_method :current_user, :local_user, :logged_in?
+  helper_method :current_user, :local_user, :logged_in?, :admin?
+
+  POSTS_PER_PAGE = 3
 
   def current_user
     if session[:user_id]
@@ -13,28 +15,33 @@ class ApplicationController < ActionController::Base
 
   def local_user
     if params[:id]
-      User.find(params[:id])
+      User.find_by(slug: params[:id])
     end
   end
 
-  def require_post_creator
-    post = Post.find(params[:id])
-    user = post.creator
-    unless !current_user.nil? && current_user == user
-      flash[:error] = "You are not authorized for this action."
-      redirect_to :back
-    end
+  def post_creator?
+
   end
 
   def logged_in?
     @logged_in ||= !!current_user
   end
 
+  def admin?
+    @admin ||= logged_in? && current_user.role == "admin"
+  end
+
   def require_current_user
-    unless !current_user.nil? && current_user == local_user
-      flash[:error] = "You are not authorized for this action."
-      redirect_to :back
-    end
+    access_denied unless !current_user.nil? && current_user == local_user  
+  end
+
+  def require_admin
+    access_denied unless admin?
+  end
+
+  def access_denied
+    flash[:error] = "You are not authorized for this action."
+    redirect_to root_path
   end
 
   def require_login

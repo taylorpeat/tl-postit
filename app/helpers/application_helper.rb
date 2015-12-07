@@ -7,6 +7,13 @@ module ApplicationHelper
     time_ago_in_words(time) + " ago"
   end
 
+  def format_full_time(time)
+    if logged_in? && !current_user.time_zone.blank?
+      time = time.in_time_zone(current_user.time_zone)
+    end
+    time = time.strftime("%m/%d/%Y %l:%M%P %Z")
+  end
+
   def voted_true?(obj)
     if vote_object = obj.votes.find_by(user_id: current_user.id)
       "collapse" if vote_object.vote

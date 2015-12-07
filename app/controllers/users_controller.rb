@@ -9,6 +9,9 @@ class UsersController < ApplicationController
   def edit
   end
 
+  def show
+  end
+
   def update
     if @user.update(user_params)
       flash[:success] = "User information changed successfully."
@@ -32,7 +35,7 @@ class UsersController < ApplicationController
 
   private
   def user_params
-    params.permit(:username, :password)
+    params.require(:user).permit(:username, :password, :time_zone)
   end
 
   def set_user

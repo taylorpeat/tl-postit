@@ -1,7 +1,7 @@
 <div class='row'>
-  <div class='span0 well text-center vote_arrows'>
+  <div class='span1 well text-center vote_arrows'>
     <% if logged_in? %>  
-      <%= link_to vote_post_comment_path(comment.post_id, comment, vote: true), method: 'post', remote: true do %>
+      <%= link_to vote_post_comment_path(comment.post, comment, vote: true), method: 'post', remote: true do %>
         <i class="icon-arrow-up <%= voted_true?(comment) %>" id="comment_<%= comment.id %>_arrow"></i>
       <% end %>
       <br>
@@ -9,7 +9,7 @@
     <span id="comment_<%= comment.id %>_votes"><%= "#{comment.vote_total} votes" %></span>
     <br>
     <% if logged_in? %>  
-      <%= link_to vote_post_comment_path(comment.post_id, comment, vote: false), method: 'post', remote: true do %>
+      <%= link_to vote_post_comment_path(comment.post, comment, vote: false), method: 'post', remote: true do %>
         <i class="icon-arrow-down <%= voted_false?(comment) %>" id="comment_<%= comment.id %>_arrow"></i>
       <% end %>
     <% end %>

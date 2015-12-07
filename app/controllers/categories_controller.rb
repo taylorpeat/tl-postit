@@ -1,5 +1,5 @@
 class CategoriesController < ApplicationController
-  before_action :require_login, only: [:new, :create]
+  before_action :require_admin, only: [:new, :create]
 
   def new
     @category = Category.new
@@ -16,8 +16,11 @@ class CategoriesController < ApplicationController
   end
 
   def show
-    @category = Category.find(params[:id])
-    @posts = @category.posts
+    @page = params[:page].to_i if params[:page] || 0
+    @category = Category.find_by(slug: params[:id])
+    @last_page = (@category.posts.size / POSTS_PER_PAGE.to_f).ceil
+    @posts = @category.posts.limit(POSTS_PER_PAGE).offset(@page * POSTS_PER_PAGE)
+    respond_to(:html, :js)
   end
 
   private

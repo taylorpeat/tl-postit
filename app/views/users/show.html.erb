@@ -1,8 +1,8 @@
-<%= render 'shared/content_title', title: "#{local_user.username}'s profile" %>
+<%= render 'shared/content_title', title: "#{local_user.username.titleize}'s Profile" %>
 
 <div class="well">
   <b>Username: &nbsp;</b><%= local_user.username %><br>
-  <b>Time zone:</b>
+  <b>Time zone: &nbsp;</b><%= local_user.time_zone %><br>
 </div>
 <b><%= local_user.username %>'s Activity</b>
 <hr>

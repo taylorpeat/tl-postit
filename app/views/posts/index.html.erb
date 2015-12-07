@@ -1,4 +1,5 @@
 <%= render 'shared/content_title', title: "All Posts" %>
-
-<%= render @posts %>
-
+<div id="post_group">
+  <%= render @posts %>
+</div>
+<%= render 'shared/pagination', link_type: :posts %>

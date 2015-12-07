@@ -1,16 +1,16 @@
-<div class='row'>
-  <div class='span0 well text-center vote_arrows'>
+<div class="row paginate_group">
+  <div class='span1 well text-center vote_arrows'>
     <% if logged_in? %>  
       <%= link_to vote_post_path(post, vote: true), method: :post, remote: true do %>
-        <i class="icon-arrow-up <%= voted_true?(post) %>" id="post_<%= post.id %>_arrow"></i>
+        <i class="icon-arrow-up <%= voted_true?(post) %>" id="post_<%= post.slug %>_arrow"></i>
       <% end %>
       <br>
     <% end %>
-    <span id="post_<%= post.id %>_votes"><%= "#{post.vote_total} votes" %></span>
+    <span id="post_<%= post.slug %>_votes"><%= "#{post.vote_total} votes" %></span>
     <br>
     <% if logged_in? %>  
       <%= link_to vote_post_path(post, vote: false), method: :post, remote: true do %>
-        <i class="icon-arrow-down <%= voted_false?(post) %>" id="post_<%= post.id %>_arrow"></i>
+        <i class="icon-arrow-down <%= voted_false?(post) %>" id="post_<%= post.slug %>_arrow"></i>
       <% end %>
     <% end %>
   </div>
@@ -22,7 +22,7 @@
     <p><%= post.description %></p>
     <p>
       <span class='quiet'>Posted by: </span><%= link_to post.creator.username, user_path(post.creator) %>
-      <small> - <%= format_time(post.created_at) %></small>
+      <small> - <%= format_full_time(post.created_at) %></small>
     </p>
     <p>
       <small><%= link_to "#{post.comments.size} comments", post_path(post) %></small>

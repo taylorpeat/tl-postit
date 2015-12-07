@@ -4,11 +4,17 @@ class PostsController < ApplicationController
   before_action :require_post_creator, only: [:edit, :update]
 
   def index
-    @posts = Post.all
+    @page = params[:page].to_i if params[:page] || 0
+    @last_page = (Post.all.size / POSTS_PER_PAGE.to_f).ceil
+    @posts = Post.limit(POSTS_PER_PAGE).offset(@page * POSTS_PER_PAGE)
+    respond_to(:html, :js)
   end
 
   def show
     @comment = Comment.new
+    @limit_increase = params[:limit].to_i if params[:limit] || 0
+    @comment_limit = 5 + @limit_increase
+    respond_to(:html, :js)
   end
 
   def new
@@ -41,34 +47,10 @@ class PostsController < ApplicationController
 
   def vote
     respond_to do |format|
-      if exist_vote = @post.votes.find_by(user_id: session[:user_id])
-        unless exist_vote.vote.to_s == params[:vote]
-          exist_vote.delete
-          @message = "Vote<br>removed".html_safe
-          @fade_in = exist_vote.vote ? ".icon-arrow-up" : ".icon-arrow-down"
-          @fade_out = "#no_id"
-          format.html { redirect_to :back; flash[:success] = "Your previous vote has been removed." }
-          format.js {}
-        end
-      end
-      if @message == nil
-        vote = @post.votes.create(vote: params[:vote], user_id: session[:user_id])
-        
-        if vote.valid?
-          @fade_in = "#no_id"
-          if vote.vote
-            @fade_out = ".icon-arrow-up"
-          else
-            @fade_out = ".icon-arrow-down"
-          end
-          format.html { redirect_to :back; flash[:success] = "Your vote has been counted." }
-          format.js { @message = "Vote<br>counted".html_safe }
-        else
-          format.html { redirect_to :back; flash[:error] = "Your vote could not be counted." }
-          format.js { @message = "Vote<br>not<br>counted".html_safe }
-        end
-      end
-    end  
+      @post.process_vote(params[:vote], session[:user_id])
+      format.html { redirect_to :back; flash[:notice] = @post.html_message }
+      format.js
+    end
   end
 
   private
@@ -78,6 +60,10 @@ class PostsController < ApplicationController
   end
 
   def set_post
-    @post = Post.find(params[:id])
+    @post = Post.find_by(slug: params[:id])
+  end
+
+  def require_post_creator
+    access_denied unless logged_in? && current_user == @post.creator || admin?
   end
 end

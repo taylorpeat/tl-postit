@@ -1,11 +1,11 @@
-$("#post_<%= @post.id %>_votes").fadeOut(200, function() {
-  $("#post_<%= @post.id %>_votes").hide().html("<%= @message %>").fadeIn(200, function () {
-    $("#post_<%= @post.id %>_votes").delay(1000).fadeOut(200, function () {      
-      $("#post_<%= @post.id %>_votes").hide().html("<%= @post.vote_total %> votes").fadeIn({duration: 200, queue: false});
+$("#post_<%= @post.slug %>_votes").fadeOut(200, function() {
+  $("#post_<%= @post.slug %>_votes").hide().html("<%= @post.js_message %>").fadeIn(200, function () {
+    $("#post_<%= @post.slug %>_votes").delay(1000).fadeOut(200, function () {      
+      $("#post_<%= @post.slug %>_votes").hide().html("<%= @post.vote_total %> votes").fadeIn({duration: 200, queue: false});
     });
   });
 });
 
-$('#post_<%= @post.id %>_arrow<%= @fade_out %>').fadeOut({duration: 200, queue: false});
+$('#post_<%= @post.slug %>_arrow<%= @post.fade_out %>').fadeOut({duration: 200, queue: false});
 
-$('#post_<%= @post.id %>_arrow<%= @fade_in %>').removeClass('collapse').hide().delay(200).fadeIn(200);
+$('#post_<%= @post.slug %>_arrow<%= @post.fade_in %>').removeClass('collapse').hide().delay(200).fadeIn(200);
