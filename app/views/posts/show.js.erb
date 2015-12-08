@@ -2,6 +2,6 @@ $("#comment-section").append("<%= escape_javascript(render @post.comments.offset
 
 $("#load-more-btn").replaceWith('<%= link_to "Load more comments...", post_path(@post, limit: (@limit_increase + 5)), class: "btn btn-primary", id: "load-more-btn", remote: true %>')
 
-if (<%= @post.comments.size < @comment_limit %>) {
+if (<%= @post.comments.size <= @comment_limit %>) {
   $("#load_comments").fadeOut(100);
 }
